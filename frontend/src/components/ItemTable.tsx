@@ -5,6 +5,7 @@ const Table: React.FC = () => {
     const [items, setItems] = useState<Item[]>([]);
     const [error, setError] = useState<string | null>(null);
 
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -30,6 +31,24 @@ const Table: React.FC = () => {
         return <div>Loading...</div>;
     }
 
+    const onDelete = async (id: number) => {
+
+        try {
+            const response = await fetch(`http://localhost:5000/api/items/${id}`, {
+                method: 'DELETE',
+            });
+            if (response.ok) {
+                console.log('Item deleted successfully');
+                setItems((prevItems) => prevItems.filter((item) => item.id !== id));
+            } else {
+                console.error('Failed to delete item');
+            }
+        } catch (error) {
+            console.error('Error deleting item: ', error);
+        }
+
+    }
+
     return (
         <table>
             <thead>
@@ -38,6 +57,7 @@ const Table: React.FC = () => {
                     <th>Name</th>
                     <th>Quantity</th>
                     <th>Price</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -47,6 +67,9 @@ const Table: React.FC = () => {
                         <td>{item.name}</td>
                         <td>{item.quantity}</td>
                         <td>${item.price}</td>
+                        <td>
+                            <button onClick={() => {onDelete(item.id)}}>Delete</button>
+                        </td>
                     </tr>
                 ))}
             </tbody>

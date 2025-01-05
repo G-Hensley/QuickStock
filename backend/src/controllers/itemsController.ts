@@ -126,7 +126,6 @@ export const deleteOne = async (req: Request, res: Response) => {
         
         if (deleted) {
             res.status(204).send();
-            res.json({ message: "Item was deleted." });
             return;
         } else {
             res.status(404).json({ error: "Item doesn't exist." });
