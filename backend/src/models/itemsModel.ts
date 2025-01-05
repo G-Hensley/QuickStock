@@ -111,4 +111,4 @@ async function deleteItem (id: number): Promise<Item | null> {
 
 }
 
-export { readAll, readOne, addItem, deleteItem, updateItems };
+export { readAll, readOne, addItem, deleteItem, updateItems, Item };
