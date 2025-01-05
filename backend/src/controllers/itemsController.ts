@@ -1,7 +1,5 @@
 import { Request, Response } from "express";
 import { readAll, readOne, addItem, updateItems, deleteItem } from "../models/itemsModel";
-import { parse } from "querystring";
-import { error } from "console";
 
 export const getItems = async (req: Request, res: Response) => {
     try {
@@ -113,3 +111,31 @@ export const updateItem = async (req: Request, res: Response): Promise<void> => 
         res.status(500).json({ error: "Failed to update item." });
     }
 };
+
+export const deleteOne = async (req: Request, res: Response) => {
+
+    try {
+        const id = parseInt(req.params.id);
+
+        if (isNaN(id)) {
+            res.status(400).json({ error: "Invalid ID Provided." });
+            return;
+        }
+
+        const deleted = await deleteItem(id);
+        
+        if (deleted) {
+            res.status(204).send();
+            res.json({ message: "Item was deleted." });
+            return;
+        } else {
+            res.status(404).json({ error: "Item doesn't exist." });
+            return;
+        }
+
+    } catch (error) {
+        console.error("Error deleting item: ", error);
+        res.status(500).json({ error: "Failed to delete item." });
+    }
+
+}

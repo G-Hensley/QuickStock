@@ -99,7 +99,7 @@ async function deleteItem (id: number): Promise<Item | null> {
         const res = await pool.query(queryText, [id]);
         console.log('Item Deleted');
 
-        return res.rows[0] as Item;
+        return res.rows as Item;
     } catch (error) {
         if (error instanceof Error) {
             console.log('Error deleting item: ', error.message);
