@@ -1,15 +1,18 @@
 import { useState, useEffect } from "react";
 import { Item } from "../../../backend/src/models/itemsModel";
+import EditModal from "./EditModal";
+import '../styles/ItemTable.css';
 
 const Table: React.FC = () => {
     const [items, setItems] = useState<Item[]>([]);
     const [error, setError] = useState<string | null>(null);
-
+    const [isEditing, setIsEditing] = useState(false);
+    const [currentItem, setCurrentItem] = useState<Item | null>(null);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('http://localhost:5000/api/items'); // Adjust the URL to your backend endpoint
+                const response = await fetch('http://localhost:5000/api/items');
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
@@ -23,6 +26,47 @@ const Table: React.FC = () => {
         fetchData();
     }, []);
 
+    const onDelete = async (id: number) => {
+        try {
+            const response = await fetch(`http://localhost:5000/api/items/${id}`, {
+                method: 'DELETE',
+            });
+            if (response.ok) {
+                setItems((prevItems) => prevItems.filter((item) => item.id !== id));
+            } else {
+                console.error('Failed to delete item');
+            }
+        } catch (error) {
+            console.error('Error deleting item: ', error);
+        }
+    };
+
+    const handleEditClick = (item: Item) => {
+        setCurrentItem(item);
+        setIsEditing(true);
+    };
+
+    const handleSave = async (updatedItem: Item) => {
+        try {
+            const response = await fetch(`http://localhost:5000/api/items/${updatedItem.id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(updatedItem),
+            });
+
+            if (response.ok) {
+                setItems((prevItems) =>
+                    prevItems.map((item) => (item.id === updatedItem.id ? updatedItem : item))
+                );
+                setIsEditing(false);
+            } else {
+                console.error('Failed to update item');
+            }
+        } catch (error) {
+            console.error('Error updating item:', error);
+        }
+    };
+
     if (error) {
         return <div>Error: {error}</div>;
     }
@@ -31,49 +75,41 @@ const Table: React.FC = () => {
         return <div>Loading...</div>;
     }
 
-    const onDelete = async (id: number) => {
-
-        try {
-            const response = await fetch(`http://localhost:5000/api/items/${id}`, {
-                method: 'DELETE',
-            });
-            if (response.ok) {
-                console.log('Item deleted successfully');
-                setItems((prevItems) => prevItems.filter((item) => item.id !== id));
-            } else {
-                console.error('Failed to delete item');
-            }
-        } catch (error) {
-            console.error('Error deleting item: ', error);
-        }
-
-    }
-
     return (
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Quantity</th>
-                    <th>Price</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {items.map((item) => (
-                    <tr key={item.id}>
-                        <td>{item.id}</td>
-                        <td>{item.name}</td>
-                        <td>{item.quantity}</td>
-                        <td>${item.price}</td>
-                        <td>
-                            <button onClick={() => {onDelete(item.id)}}>Delete</button>
-                        </td>
+        <>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Actions</th>
                     </tr>
-                ))}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    {items.map((item) => (
+                        <tr className="row" key={item.id}>
+                            <td>{item.id}</td>
+                            <td>{item.name}</td>
+                            <td>{item.quantity}</td>
+                            <td>${item.price}</td>
+                            <td className="actions">
+                                <button onClick={() => onDelete(item.id)}>Delete</button>
+                                <button onClick={() => handleEditClick(item)}>Edit</button>
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+            {isEditing && currentItem && (
+                <EditModal
+                    item={currentItem}
+                    onClose={() => setIsEditing(false)}
+                    onSave={handleSave}
+                />
+            )}
+        </>
     );
 };
 

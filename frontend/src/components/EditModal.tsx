@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import '../styles/EditModal.css';
 
 interface Item {
     id: number;
@@ -23,23 +24,10 @@ const EditModal: React.FC<EditModalProps> = ({ item, onClose, onSave }) => {
     };
 
     return (
-        <div style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-        }}>
-            <div style={{
-                backgroundColor: 'white',
-                padding: '20px',
-                borderRadius: '8px',
-            }}>
+        <div className='modal-bg'>
+            <div className='edit-container'>
                 <h2>Edit Item</h2>
+                <div className="info-container">
                 <label>
                     Name:
                     <input value={name} onChange={(e) => setName(e.target.value)} />
@@ -54,6 +42,7 @@ const EditModal: React.FC<EditModalProps> = ({ item, onClose, onSave }) => {
                 </label>
                 <button onClick={handleSave}>Save</button>
                 <button onClick={onClose}>Cancel</button>
+                </div>
             </div>
         </div>
     );
