@@ -1,0 +1,40 @@
+.addBtn {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-top: 2rem;
+}
+
+.add-modal {
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    height: 100%;
+    justify-content: center;
+    left: 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+}
+
+.item-container {
+    align-items: flex-end;
+    background-color: #202b30;
+    border-radius: 10px;
+    border: 2px solid rgb(43, 92, 124);
+    display: flex;
+    gap: 1rem;
+    height: fit-content;
+    padding: 2rem;
+    width: fit-content;
+}
+
+.input-column {
+    align-items: flex-start;
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+}
+
+.itemInput {
+    font-size: 1rem;
+}

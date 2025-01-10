@@ -1,11 +1,14 @@
 th {
     background-color: #202b30;
+    border-bottom: 2px solid rgb(43, 92, 124);
     font-size: 1.1rem;
     margin: 0.2rem;
-    padding: 0 2rem;
+    padding: 0 2rem 0.5rem;
 }
 
 td {
+    border-right: 2px solid rgb(43, 92, 124);
+    padding: 0 0.4rem;
     margin: 0.5rem;
 }
 
@@ -14,7 +17,14 @@ tr:nth-child(even) {
 }
 
 .actions {
+    border-right: none;
     display: flex;
     gap: 1rem;
     justify-content: center;
+}
+
+table {
+    border: 2px solid rgb(43, 92, 124);
+    border-radius: 10px;
+    padding: 0.2rem;
 }

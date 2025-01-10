@@ -1,18 +1,25 @@
 import { useState, useEffect } from "react";
-import { Item } from "../../../backend/src/models/itemsModel";
+import { Item, updateItems } from "../../../backend/src/models/itemsModel";
 import EditModal from "./EditModal";
+import  { AddItem }  from "./AddItem";
 import '../styles/ItemTable.css';
 
 const Table: React.FC = () => {
+    const apiEndpoint: string = 'http://localhost:5000/api/items/';
+
     const [items, setItems] = useState<Item[]>([]);
     const [error, setError] = useState<string | null>(null);
     const [isEditing, setIsEditing] = useState(false);
     const [currentItem, setCurrentItem] = useState<Item | null>(null);
+    
+    const addItemToTable = (newItem: Item) => {
+        setItems((prevItems) => [...prevItems, newItem]);
+    }
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('http://localhost:5000/api/items');
+                const response = await fetch(apiEndpoint);
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
@@ -28,7 +35,7 @@ const Table: React.FC = () => {
 
     const onDelete = async (id: number) => {
         try {
-            const response = await fetch(`http://localhost:5000/api/items/${id}`, {
+            const response = await fetch(`${apiEndpoint}${id}`, {
                 method: 'DELETE',
             });
             if (response.ok) {
@@ -48,7 +55,7 @@ const Table: React.FC = () => {
 
     const handleSave = async (updatedItem: Item) => {
         try {
-            const response = await fetch(`http://localhost:5000/api/items/${updatedItem.id}`, {
+            const response = await fetch(`${apiEndpoint}${updatedItem.id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(updatedItem),
@@ -102,6 +109,7 @@ const Table: React.FC = () => {
                     ))}
                 </tbody>
             </table>
+            <AddItem addItemToTable={addItemToTable}/>
             {isEditing && currentItem && (
                 <EditModal
                     item={currentItem}
