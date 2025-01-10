@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Item, updateItems } from "../../../backend/src/models/itemsModel";
+import { Item } from "../../../backend/src/models/itemsModel";
 import EditModal from "./EditModal";
 import  { AddItem }  from "./AddItem";
 import '../styles/ItemTable.css';

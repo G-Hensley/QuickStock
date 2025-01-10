@@ -26,5 +26,6 @@ tr:nth-child(even) {
 table {
     border: 2px solid rgb(43, 92, 124);
     border-radius: 10px;
+    box-shadow: 0 2px 8px -2px rgba(0, 0, 0, 0.836);
     padding: 0.2rem;
 }
